@@ -29,8 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
-<<<<<<< HEAD
-   sdk: flutter
+    sdk: flutter
   google_fonts: ^6.1.0
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.2.1
@@ -38,6 +37,8 @@ dependencies:
   dots_indicator: ^4.0.1
   persistent_bottom_nav_bar: ^6.2.1
   shared_preferences: ^2.5.3
+<<<<<<< HEAD
+   
 =======
 >>>>>>> 8677d50dc255c9eeb73221dd32ff821bd8a4ba35
 
