@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fresh_cart_grocery_app/screens/customer_bottom_shell.dart';
 import '../screens/splash_screen.dart';
 import '../screens/onboarding_screen.dart';
 import '../screens/login_screen.dart';
@@ -43,7 +44,7 @@ class AppRoutes {
       case customerHome:
         final username = settings.arguments as String?;
         return MaterialPageRoute(
-          builder: (_) => CustomerHomeScreen(username: username),
+          builder: (_) => CustomerBottomShell(username: username),
         );
       case shopDetail:
         return MaterialPageRoute(builder: (_) => const ShopDetailScreen());
