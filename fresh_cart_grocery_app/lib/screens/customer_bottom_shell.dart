@@ -77,12 +77,11 @@ class _CenteredNavBar extends StatelessWidget {
 }
 
 class CustomerBottomShell extends StatelessWidget {
-  final String? username;
-  const CustomerBottomShell({super.key, this.username});
+  const CustomerBottomShell({super.key});
 
   List<PersistentTabConfig> _tabs(BuildContext context) => [
         PersistentTabConfig(
-          screen: CustomerHomeScreen(username: username),
+          screen: const CustomerHomeScreen(),
           item: ItemConfig(
             icon: const Icon(Icons.home_outlined),
             title: 'Home',
