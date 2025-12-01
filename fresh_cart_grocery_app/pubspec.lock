@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: dots_indicator
-      sha256: c070af5058a084ba7b354df4b4c26c719595d70a3531eea6edd8af8716684ba3
+      sha256: "2a53e0321a3f0d87e38ef30f6e9ff1deb5d6c0e2c5708e057d26cdaa94a95f10"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "3.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -224,6 +224,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -292,10 +300,10 @@ packages:
     dependency: "direct main"
     description:
       name: persistent_bottom_nav_bar_v2
-      sha256: "4c1f5b5c71010390746b35d2ffb4b55ec451f04286c133beabb93e16a66e0a5f"
+      sha256: dec5caf611ff06af16cf9536b9a99172c2f5441156f50b8061ca8643a5808a6b
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.0"
+    version: "5.4.0"
   petitparser:
     dependency: transitive
     description:
@@ -320,6 +328,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.5+1"
   shared_preferences:
     dependency: "direct main"
     description:
