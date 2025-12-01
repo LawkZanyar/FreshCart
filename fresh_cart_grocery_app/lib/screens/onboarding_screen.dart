@@ -106,7 +106,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   DotsIndicator(
                     dotsCount: _pages.length,
-                    position: _currentPage,
+                    // Convert fractional page value to an int index and clamp to valid range
+                    position: _currentPage.round().clamp(0, _pages.length - 1),
                     decorator: DotsDecorator(
                       activeColor: scheme.primary,
                       size: const Size(8, 8),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fresh_cart_grocery_app/screens/customer_bottom_shell.dart';
+import 'package:flutter_freshcart/screens/customer_bottom_shell.dart';
+import '../core_models/user_state.dart';
 import '../screens/splash_screen.dart';
 import '../screens/onboarding_screen.dart';
 import '../screens/login_screen.dart';
@@ -32,6 +33,7 @@ class AppRoutes {
   static const inventory = '/inventory';
   static const monthlyProfits = '/monthly_profits';
   static const ownerProfile = '/owner_profile';
+  static const customerShell = '/customer_bottom_shell';
   
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -44,10 +46,16 @@ class AppRoutes {
       case customerHome:
         final username = settings.arguments as String?;
         return MaterialPageRoute(
-          builder: (_) => CustomerBottomShell(username: username),
+          builder: (context) => UserState(
+            username: username,
+            child: const CustomerBottomShell(),
+          ),
         );
       case shopDetail:
-        return MaterialPageRoute(builder: (_) => const ShopDetailScreen());
+        final shopId = settings.arguments as String?;
+        return MaterialPageRoute(
+          builder: (_) => ShopDetailScreen(shopId: shopId),
+        );
       case search:
         return MaterialPageRoute(builder: (_) => const SearchScreen());
       case cart:
@@ -68,6 +76,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const MonthlyProfitsScreen());
       case ownerProfile:
         return MaterialPageRoute(builder: (_) => const OwnerProfileScreen());
+      case customerShell:
+        return MaterialPageRoute(builder: (_) => const CustomerBottomShell());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
