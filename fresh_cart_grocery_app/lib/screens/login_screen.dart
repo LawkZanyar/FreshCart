@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../routes/routes.dart';
-import '../dummy_data/login_data.dart';
+import '../dummy_data/dummy_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
