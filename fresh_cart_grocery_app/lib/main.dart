@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_freshcart/services/cart_service.dart';
 import 'routes/routes.dart';
+import 'package:provider/provider.dart';
 import 'theme/theme.dart';
 
 void main() {
@@ -12,7 +14,13 @@ void main() {
     )
   );
 
-  runApp(const ShopApp());
+
+  runApp(
+    ChangeNotifierProvider<CartService>(
+      create: (_) => CartService(),
+      child: const ShopApp(),
+    ),
+  );
 }
 
 class ShopApp extends StatelessWidget {
