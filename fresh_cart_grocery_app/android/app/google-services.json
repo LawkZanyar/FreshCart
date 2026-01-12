@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1082810954588",
+    "project_id": "freshcart-c28d7",
+    "storage_bucket": "freshcart-c28d7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082810954588:android:d4c92de901a837a5230799",
+        "android_client_info": {
+          "package_name": "com.example.fresh_cart_grocery_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKYac-fHZEPel6LErC8uHQGSDa82qdsJ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
