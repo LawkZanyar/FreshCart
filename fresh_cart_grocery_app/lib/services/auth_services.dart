@@ -3,13 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class AuthService extends ChangeNotifier {
-	final FirebaseAuth _auth = FirebaseAuth.instance;
-	final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-	User? get currentUser => _auth.currentUser;
-	Stream<User?> get authStateChanges => _auth.authStateChanges();
+  User? get currentUser => _auth.currentUser;
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-Future<String?> register(String email, String password, String username, {bool isOwner = false, String shopName = ''}) async {
+  Future<String?> register(
+    String email,
+    String password,
+    String username, {
+    bool isOwner = false,
+    String shopName = '',
+  }) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -30,20 +36,30 @@ Future<String?> register(String email, String password, String username, {bool i
       }
 
       notifyListeners();
-			return null;
-		} on FirebaseAuthException catch (e) {
-			return e.message;
-		}
-	}
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
 
-	Future<String?> login(String email, String password) async {
-		try {
-			await _auth.signInWithEmailAndPassword(email: email, password: password);
-			return null;
-		} on FirebaseAuthException catch (e) {
-			return e.message;
-		}
-	}
+  Future<String?> login(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    }
+  }
 
-	Future<void> signOut() async => await _auth.signOut();
+  Future<void> signOut() async => await _auth.signOut();
+
+  Future<void> updateDisplayName(String newName) async {
+    try {
+      await _auth.currentUser?.updateDisplayName(newName);
+      await _auth.currentUser?.reload();
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
