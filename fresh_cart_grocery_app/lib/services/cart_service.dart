@@ -1,12 +1,18 @@
 import 'package:flutter/foundation.dart';
-import '../dummy_data/dummy_data.dart';
 
 class CartItem {
   final String productId;
+  final String shopId;
   final String name;
   final double price;
   int qty;
-  CartItem({required this.productId, required this.name, required this.price, this.qty = 1});
+  CartItem({
+    required this.productId,
+    required this.shopId,
+    required this.name,
+    required this.price,
+    this.qty = 1,
+  });
 }
 
 class CartService extends ChangeNotifier {
@@ -15,15 +21,18 @@ class CartService extends ChangeNotifier {
   int get totalQty => _items.fold(0, (t, e) => t + e.qty);
   double get totalPrice => _items.fold(0, (t, e) => t + (e.qty * e.price));
 
-  void add(String id) {
-    final product = dummyProducts.firstWhere((p) => p['id'] == id);
-    final idx = _items.indexWhere((i) => i.productId == id);
+  /// Add product with full info; called from product screens
+  void add(String productId, String shopId, String name, double price) {
+    final idx = _items.indexWhere((i) => i.productId == productId);
     if (idx == -1) {
-      _items.add(CartItem(
-        productId: id,
-        name: product['name'],
-        price: product['price'],
-      ));
+      _items.add(
+        CartItem(
+          productId: productId,
+          shopId: shopId,
+          name: name,
+          price: price,
+        ),
+      );
     } else {
       _items[idx].qty++;
     }
