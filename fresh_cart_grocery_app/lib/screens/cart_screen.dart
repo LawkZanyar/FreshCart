@@ -15,89 +15,155 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('My Cart')),
-      body: cart.items.isEmpty ? const Center(child: Text('Your Cart is Empty, Get to Shopping!'),) : 
-      ListView(
-        padding: const EdgeInsets.only(bottom: 80),
-        children: [
-          ...List.generate(cart.items.length, (i) {
-            final item = cart.items[i];
-            return Dismissible(
-              key: ValueKey(item.productId), 
-              background: Container(color: Colors.red,),
-              onDismissed: (_) => cart.remove(item.productId),
-              child: ListTile(
-                leading: const Icon(Icons.shopping_bag),
-                title: Text(item.name),
-                subtitle: Text('\$${item.price.toStringAsFixed(2)} each'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton( 
-                      icon: const Icon(Icons.remove_circle_outline),
-                      onPressed: () => cart.decrement(item.productId),
-                    ),
-
-                    Text('${item.qty}'),
-
-                    IconButton(
-                      icon: const Icon(Icons.add_circle_outline),
-                      onPressed: () => cart.increment(item.productId),
-                    )
-                  ],
-                ),
+      body: cart.items.isEmpty
+          ? Center(
+              child: Text(
+                'Your Cart is Empty, Get to Shopping!',
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.white70),
               ),
-            );
-          }),
-
-          const Divider(thickness: 1, height: 1, color: Colors.black,),
-
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
+            )
+          : ListView(
+              padding: const EdgeInsets.only(bottom: 80),
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('Subtotal:', style: Theme.of(context).textTheme.bodyLarge),
-                    const SizedBox(width: 16),
-                    Text('\$${subtotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text('Delivery:', style: Theme.of(context).textTheme.bodyLarge),
-                    const SizedBox(width: 16),
-                    Text('\$${deliveryFee.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Total', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                    Text('\$${total.toStringAsFixed(2)}', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    const Spacer(),
-                    ElevatedButton(
-                      onPressed: () {
-                        cart.clear();
-                        Navigator.pushNamed(context, AppRoutes.orderConfirmation);
-                      },
-                      child: const Text('Checkout'),
+                ...List.generate(cart.items.length, (i) {
+                  final item = cart.items[i];
+                  return Dismissible(
+                    key: ValueKey(item.productId),
+                    background: Container(color: Colors.red),
+                    onDismissed: (_) => cart.remove(item.productId),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.shopping_bag,
+                        color: Colors.white70,
+                      ),
+                      title: Text(
+                        item.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '\$${item.price.toStringAsFixed(2)} each',
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.remove_circle_outline,
+                              color: Colors.white70,
+                            ),
+                            onPressed: () => cart.decrement(item.productId),
+                          ),
+                          Text(
+                            '${item.qty}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.add_circle_outline,
+                              color: Colors.white70,
+                            ),
+                            onPressed: () => cart.increment(item.productId),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  );
+                }),
+                const Divider(thickness: 1, height: 1, color: Colors.white24),
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Subtotal:',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: Colors.white70),
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            '\$${subtotal.toStringAsFixed(2)}',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Delivery:',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: Colors.white70),
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            '\$${deliveryFee.toStringAsFixed(2)}',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total',
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                          ),
+                          Text(
+                            '\$${total.toStringAsFixed(2)}',
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        children: [
+                          const Spacer(),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.orderConfirmation,
+                              );
+                            },
+                            child: const Text('Checkout'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          )
-        ],
-      )
     );
   }
 }

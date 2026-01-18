@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core_models/user_state.dart';
 import '../routes/routes.dart';
 import '../services/cart_service.dart';
+import '../services/auth_services.dart';
 
-class CustomerProfileScreen extends StatelessWidget {
+class CustomerProfileScreen extends StatefulWidget {
   const CustomerProfileScreen({super.key});
 
+  @override
+  State<CustomerProfileScreen> createState() => _CustomerProfileScreenState();
+}
+
+class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: const Text('Logout', style: TextStyle(color: Colors.white)),
+        content: const Text('Are you sure you want to logout?', style: TextStyle(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('No'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(dialogContext).pop();
-              // Clear cart data before logout
+              // Sign out from Firebase Auth
+              await context.read<AuthService>().signOut();
+              // Clear cart data
               context.read<CartService>().clear();
-              // Navigate to root navigator to clear bottom nav stack completely
-              Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
-                AppRoutes.login,
-                (route) => false,
-              );
+              // Navigate to login
+              if (context.mounted) {
+                Navigator.of(
+                  context,
+                  rootNavigator: true,
+                ).pushNamedAndRemoveUntil(AppRoutes.login, (route) => false);
+              }
             },
             child: const Text('Yes'),
           ),
@@ -36,15 +45,62 @@ class CustomerProfileScreen extends StatelessWidget {
     );
   }
 
+  void _showEditNameDialog(BuildContext context, String currentName) {
+    final controller = TextEditingController(text: currentName);
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Edit Display Name', style: TextStyle(color: Colors.white)),
+        content: TextField(
+          controller: controller,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'Enter new display name',
+            hintStyle: const TextStyle(color: Colors.white38),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.white24),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: theme.colorScheme.primary,
+                width: 2,
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (controller.text.isNotEmpty) {
+                await context.read<AuthService>().updateDisplayName(
+                  controller.text,
+                );
+                if (context.mounted) Navigator.of(dialogContext).pop();
+              }
+            },
+            child: const Text('Save', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final username = UserState.of(context)?.username ?? 'Guest';
+    final username =
+        context.watch<AuthService>().currentUser?.displayName ?? 'Guest';
     final theme = Theme.of(context);
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
+      appBar: AppBar(title: const Text('Profile')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -69,24 +125,38 @@ class CustomerProfileScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary.withOpacity(0.7),
+                      color: Colors.white,
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 24),
-              // Username
-              Text(
-                username,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
+              // Username with Edit Icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    username,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    iconSize: 20,
+                    onPressed: () => _showEditNameDialog(context, username),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               // Role
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.secondaryContainer.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(20),
@@ -94,7 +164,7 @@ class CustomerProfileScreen extends StatelessWidget {
                 child: Text(
                   'Customer',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSecondaryContainer.withOpacity(0.8),
+                    color: Colors.white70,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -117,10 +187,7 @@ class CustomerProfileScreen extends StatelessWidget {
                   icon: const Icon(Icons.logout),
                   label: const Text(
                     'Logout',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

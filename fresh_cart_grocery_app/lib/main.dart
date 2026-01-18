@@ -6,6 +6,8 @@ import 'package:flutter_freshcart/services/cart_service.dart';
 import 'package:flutter_freshcart/services/auth_services.dart';
 import 'package:flutter_freshcart/screens/login_screen.dart';
 import 'package:flutter_freshcart/screens/customer_bottom_shell.dart';
+import 'package:flutter_freshcart/screens/owner_bottom_shell.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'routes/routes.dart';
 import 'package:provider/provider.dart';
 import 'theme/theme.dart';
@@ -61,7 +63,23 @@ class ShopApp extends StatelessWidget {
           }
           final user = snap.data;
           if (user == null) return const LoginScreen();
-          return const CustomerBottomShell();
+          // Determine role by checking if the user owns a shop
+          return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            future: FirebaseFirestore.instance
+                .collection('shops')
+                .where('ownerId', isEqualTo: user.uid)
+                .limit(1)
+                .get(),
+            builder: (context, shopSnap) {
+              if (shopSnap.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final isOwner = (shopSnap.data?.docs.isNotEmpty ?? false);
+              return isOwner ? const OwnerBottomShell() : const CustomerBottomShell();
+            },
+          );
         },
       ),
     );

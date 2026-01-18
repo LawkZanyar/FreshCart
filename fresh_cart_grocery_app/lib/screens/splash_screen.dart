@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../routes/routes.dart';
+import '../services/auth_services.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,17 +16,20 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3), () async {
-      if(!mounted) return;
+    Future.delayed(Duration.zero, () async {
+      if (!mounted) return;
 
       final prefs = await SharedPreferences.getInstance();
       final hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
 
-      if (hasSeenOnboarding) {
-        Navigator.pushReplacementNamed(context, AppRoutes.login);
-      } else {
+      if (!hasSeenOnboarding) {
         Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
+        return;
       }
+
+      final auth = context.read<AuthService>();
+      final target = auth.currentUser == null ? AppRoutes.login : AppRoutes.customerShell;
+      Navigator.pushReplacementNamed(context, target);
     });
   }
   
