@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/cart_service.dart';
 import '../routes/routes.dart';
 
@@ -71,7 +72,48 @@ class CartScreen extends StatelessWidget {
                               Icons.add_circle_outline,
                               color: Colors.white70,
                             ),
-                            onPressed: () => cart.increment(item.productId),
+                            onPressed: () async {
+                              final doc = await FirebaseFirestore.instance
+                                  .collection('shops')
+                                  .doc(item.shopId)
+                                  .collection('products')
+                                  .doc(item.productId)
+                                  .get();
+                              final stock = (doc.data()?['stock'] ?? 0) as int;
+                              // If current qty already equals or exceeds stock, show notification
+                              if (item.qty >= stock) {
+                                final msg = stock <= 0
+                                    ? 'Product is out of stock'
+                                    : 'Cannot add more — only $stock available';
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      msg,
+                                      style: TextStyle(
+                                        color: Colors.red.shade900,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: const Color(0xFFFFCDD2),
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    margin: const EdgeInsets.only(
+                                      top: 16,
+                                      left: 16,
+                                      right: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              cart.increment(item.productId, maxStock: stock);
+                            },
                           ),
                         ],
                       ),

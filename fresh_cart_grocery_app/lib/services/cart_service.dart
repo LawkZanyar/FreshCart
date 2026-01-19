@@ -39,12 +39,14 @@ class CartService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void increment(String id) {
+  /// Increment item quantity but respect optional `maxStock` limit.
+  void increment(String id, {int? maxStock}) {
     final idx = _items.indexWhere((i) => i.productId == id);
-    if (idx != -1) {
-      _items[idx].qty++;
-      notifyListeners();
-    }
+    if (idx == -1) return;
+    // If maxStock is provided, do not exceed it.
+    if (maxStock != null && _items[idx].qty >= maxStock) return;
+    _items[idx].qty++;
+    notifyListeners();
   }
 
   void decrement(String id) {
